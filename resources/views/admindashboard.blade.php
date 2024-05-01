@@ -45,7 +45,7 @@
                             <th>ID</th>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Emaill</th>
+                            <th>Email</th>
                             <th>Phone Number</th>
                             <th>Address</th>
                             <th>Actions</th>
