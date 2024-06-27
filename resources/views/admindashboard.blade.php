@@ -38,6 +38,11 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                </div>
+            </div>
             <div class="table-responsive">
                 <table id="userTable" class="table table-striped table-bordered">
                     <thead class="thead-dark">
@@ -63,6 +68,7 @@
                             <td>{{ $item->phonenum }}</td>
                             <td>{{ $item->address }}</td>
                             <td>
+                                <button class="btn btn-info" onclick="showUserDetails({{ $item }})">Show</button>
                                 <a href="{{ url('admindashboard/'.$item->id.'/edit') }}" class="btn btn-primary">Edit</a>
                                 <a href="{{ url('admindashboard/'.$item->id.'/delete') }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
@@ -70,6 +76,30 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <img src="" id="modalUserImage" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" alt="User Image">
+                        <p>Name: <span id="modalUserName"></span></p>
+                        <p>Email: <span id="modalUserEmail"></span></p>
+                        <p>Phone Number: <span id="modalUserPhone"></span></p>
+                        <p>Address: <span id="modalUserAddress"></span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -82,6 +112,33 @@
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
+        }
+
+        // JavaScript function to search the table
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var searchValue = this.value.toLowerCase();
+            var tableRows = document.querySelectorAll('#userTable tbody tr');
+
+            tableRows.forEach(function(row) {
+                var rowText = row.innerText.toLowerCase();
+                if (rowText.indexOf(searchValue) === -1) {
+                    row.style.display = 'none';
+                } else {
+                    row.style.display = '';
+                }
+            });
+        });
+
+        // JavaScript function to show user details in modal
+        function showUserDetails(user) {
+            document.getElementById('modalUserImage').src = '{{ asset('') }}' + user.image;
+            document.getElementById('modalUserName').innerText = user.name;
+            document.getElementById('modalUserEmail').innerText = user.email;
+            document.getElementById('modalUserPhone').innerText = user.phonenum;
+            document.getElementById('modalUserAddress').innerText = user.address;
+
+            var userModal = new bootstrap.Modal(document.getElementById('userModal'));
+            userModal.show();
         }
     </script>
 </div>
